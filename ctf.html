@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CTF — m0rbidmask</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <p class="eyebrow">capture the flag</p>
+  <h1 class="page-title">CTF результаты</h1>
+  <p class="page-sub">Соревнования, места и команды. Клик по строке открывает борду на CTFtime.</p>
+  <div class="chips" id="chips"></div>
+  <div class="ctf-table" id="table"></div>
+</main>
+
+<script src="data.js"></script>
+<script src="common.js"></script>
+<script>
+buildChrome("ctf");
+const table = document.getElementById("table");
+let active = "all";
+
+const pct = (p,t)=> (p&&t) ? Math.round(p/t*100) : null;
+
+function render(list){
+  table.innerHTML = `
+    <div class="row head">
+      <span class="c-event">соревнование</span>
+      <span class="c-place">место</span>
+      <span class="c-team">команда</span>
+      <span class="c-date">дата</span>
+    </div>` + list.map(x=>{
+    const pc = pct(x.place,x.total);
+    const top = pc!==null && pc<=10 ? "top" : "";
+    return `
+    <a class="row ${top}" href="${x.url}" target="_blank" rel="noopener">
+      <span class="c-event">
+        <strong>${x.event}</strong>
+        ${x.tags&&x.tags.length?`<span class="row-tags">${x.tags.map(t=>`<i>${t}</i>`).join("")}</span>`:""}
+      </span>
+      <span class="c-place">
+        ${x.place?`<b>#${x.place}</b>`:`<b>—</b>`}${x.total?`<small> / ${x.total}</small>`:""}
+        ${pc!==null?`<span class="pct ${top}">топ ${pc}%</span>`:""}
+      </span>
+      <span class="c-team">${x.team}</span>
+      <span class="c-date">${x.date}</span>
+    </a>`;
+  }).join("");
+}
+
+const teams = ["all", ...new Set(CTF.map(x=>x.team))];
+const chips = document.getElementById("chips");
+chips.innerHTML = teams.map(t=>`<button class="chip ${t==='all'?'on':''}" data-t="${t}">${t==='all'?'все':t}</button>`).join("");
+chips.addEventListener("click", e=>{
+  if(!e.target.dataset.t) return;
+  active = e.target.dataset.t;
+  [...chips.children].forEach(b=>b.classList.toggle("on", b.dataset.t===active));
+  render(active==="all"?CTF:CTF.filter(x=>x.team===active));
+});
+
+render(CTF);
+</script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>m0rbidmask</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <section class="intro">
+    <p class="eyebrow">portfolio</p>
+    <h1><span class="nick" id="nick"></span><span class="tw-cursor" id="twcur"></span></h1>
+    <p class="role" id="role"></p>
+    <p class="tagline" id="tagline"></p>
+    <div class="cta">
+      <a href="certs.html" class="btn">Сертификаты</a>
+      <a href="ctf.html" class="btn">CTF</a>
+      <a href="bio.html" class="btn">О себе</a>
+    </div>
+  </section>
+
+  <section class="stats" id="stats"></section>
+
+  <section>
+    <h2 class="block-h">основные достижения</h2>
+    <div class="highlights" id="highlights"></div>
+  </section>
+</main>
+
+<script src="data.js"></script>
+<script src="common.js"></script>
+<script>
+buildChrome("home");
+document.getElementById("role").textContent = PROFILE.role;
+document.getElementById("highlights").innerHTML = HIGHLIGHTS.map(h=>`
+  <div class="hl"><div class="t">${h.title}</div><div class="n">${h.note}</div></div>`).join("");
+
+// --- цифры-достижения (считаются автоматически из data.js) ---
+const played = CTF.filter(c => c.place > 0 && c.total > 0);
+let best = null;
+played.forEach(c => {
+  const pct = Math.round(c.place / c.total * 100);
+  if (best === null || pct < best.pct) best = { pct, event: c.event };
+});
+const stats = [
+  { num: played.length,  label: "сыграно CTF" },
+  { num: CERTS.length,   label: "сертификатов" },
+  ...(best ? [{ num: "топ " + best.pct + "%", label: "лучший результат", sub: best.event }] : []),
+];
+document.getElementById("stats").innerHTML = stats.map(s=>`
+  <div class="stat">
+    <div class="stat-num">${s.num}</div>
+    <div class="stat-label">${s.label}</div>
+    ${s.sub ? `<div class="stat-sub">${s.sub}</div>` : ""}
+  </div>`).join("");
+
+// --- typewriter: печатаем имя, затем tagline по очереди ---
+const nickEl = document.getElementById("nick");
+const tagEl  = document.getElementById("tagline");
+const curEl  = document.getElementById("twcur");
+const NAME = PROFILE.name || PROFILE.nick;
+const TAG  = PROFILE.tagline || "";
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function typeText(el, txt, speed, done){
+  let i = 0;
+  (function step(){
+    if(i <= txt.length){ el.textContent = txt.slice(0, i++); setTimeout(step, speed); }
+    else if(done) done();
+  })();
+}
+
+if(reduceMotion){
+  // если анимации отключены — показываем сразу
+  nickEl.textContent = NAME;
+  tagEl.textContent  = TAG;
+  if(curEl) curEl.style.display = "none";
+} else {
+  nickEl.textContent = "";
+  tagEl.textContent  = "";
+  typeText(nickEl, NAME, 80, ()=>{
+    setTimeout(()=>typeText(tagEl, TAG, 30, ()=>{
+      if(curEl) curEl.style.display = "none";  // курсор гаснет после печати
+    }), 400);
+  });
+}
+
+// --- анимация появления при скролле (без .intro — там печать) ---
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } });
+}, { threshold: 0.12 });
+document.querySelectorAll(".stat, .hl, .block-h").forEach((el,i)=>{
+  el.classList.add("reveal");
+  el.style.transitionDelay = (i * 60) + "ms";
+  io.observe(el);
+});
+</script>
+</body>
+</html>

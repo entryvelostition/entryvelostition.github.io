@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — m0rbidmask</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <section class="nf">
+    <p class="nf-code">404</p>
+    <h1 class="nf-title">флаг не найден</h1>
+    <p class="nf-sub">Ты свернул не в ту подсеть. Этой страницы нет в scope.</p>
+    <pre class="nf-term"><span class="nf-prompt">m0rbidmask@web:~$</span> cat /<span id="nf-path">requested/page</span>
+cat: <span id="nf-path2">requested/page</span>: No such file or directory
+<span class="nf-prompt">m0rbidmask@web:~$</span> <span class="nf-cursor">_</span></pre>
+    <div class="cta">
+      <a href="index.html" class="btn">← вернуться на главную</a>
+    </div>
+  </section>
+</main>
+
+<script src="data.js"></script>
+<script src="common.js"></script>
+<script>
+buildChrome("");
+// подставим реальный путь, по которому пришёл пользователь
+const p = location.pathname.replace(/^\/+/, "") || "unknown";
+document.getElementById("nf-path").textContent = p;
+document.getElementById("nf-path2").textContent = p;
+</script>
+</body>
+</html>

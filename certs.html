@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Сертификаты — m0rbidmask</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <p class="eyebrow">certificates</p>
+  <h1 class="page-title">Сертификаты</h1>
+  <p class="page-sub">Кликни по карточке — откроется PDF.</p>
+  <div class="cert-filters" id="filters"></div>
+  <div class="cert-grid" id="grid"></div>
+</main>
+
+<script src="data.js"></script>
+<script src="common.js"></script>
+<script>
+buildChrome("certs");
+
+const CAT_LABELS = { all:"все", ctf:"CTF", olympiad:"олимпиады", edu:"образовательные" };
+const CAT_ORDER = ["all","ctf","olympiad","edu"];
+const present = new Set(CERTS.map(c => c.cat).filter(Boolean));
+
+const filtersEl = document.getElementById("filters");
+const gridEl = document.getElementById("grid");
+
+function renderGrid(cat){
+  const list = (cat === "all") ? CERTS : CERTS.filter(c => c.cat === cat);
+  gridEl.innerHTML = list.map(c=>`
+    <a class="cert" href="${c.file}" target="_blank" rel="noopener">
+      <div class="cert-thumb">${c.thumb?`<img src="${c.thumb}" alt="${c.title}" loading="lazy">`:`<span class="ph">${c.title[0]}</span>`}</div>
+      <div class="cert-body">
+        <h3>${c.title}</h3>
+        <div class="iss">${c.issuer}</div>
+        <div class="dt">${c.date}</div>
+      </div>
+      <span class="cert-open">открыть PDF ↗</span>
+    </a>`).join("");
+}
+
+filtersEl.innerHTML = CAT_ORDER
+  .filter(cat => cat === "all" || present.has(cat))
+  .map((cat,i) => `<button class="cert-filter${i===0?' active':''}" data-cat="${cat}">${CAT_LABELS[cat]}</button>`)
+  .join("");
+
+filtersEl.addEventListener("click", e => {
+  const btn = e.target.closest(".cert-filter");
+  if(!btn) return;
+  filtersEl.querySelectorAll(".cert-filter").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  renderGrid(btn.dataset.cat);
+});
+
+renderGrid("all");
+</script>
+</body>
+</html>
