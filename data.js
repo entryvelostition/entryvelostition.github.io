@@ -94,8 +94,8 @@ const CERTS = [
     issuer: "KyteBytes",
     date: "12.06.2026 - 16.06.2026",
     cat: "ctf",
-    file: "assets/certs/boroCTF-2026-certificate.pdf",
-    thumb: "assets/certs/boroCTF-2026-certificate.png"
+    file: "assets/certs/boroctf.pdf",
+    thumb: "assets/certs/boroctf.png"
   },
 ];
 
