@@ -66,7 +66,7 @@ const CERTS = [
     thumb: "assets/certs/alfa-ctf-2026.png"
   },
   {
-    title: "ВШЭ CTF",
+    title: "ВШЭ CTF 2026",
     issuer: "НИУ ВШЭ",
     date: "2026",
     cat: "ctf",
@@ -88,6 +88,14 @@ const CERTS = [
     cat: "edu",
     file: "assets/certs/thm-lt3gvu.pdf",
     thumb: "assets/certs/thm-lt3gvu.png"
+  },
+  {
+    title: "boroCTF 2026",
+    issuer: "KyteBytes",
+    date: "12.06.2026 - 16.06.2026",
+    cat: "ctf",
+    file: "assets/certs/boroCTF-2026-certificate.pdf",
+    thumb: "assets/certs/boroCTF-2026-certificate.png"
   },
 ];
 
@@ -133,20 +141,11 @@ const CTF = [
   },
   {
     event: "boroCTF 2026",
-    place: 0,
-    total: 0,
+    place: 75,
+    total: 819,
     team: "m0rbidmask",
-    url: "https://ctftime.org/event/0000/",
-    date: "2026",
+    url: "https://ctftime.org/event/3309/",
+    date: "12.06.2026 - 16.06.2026",
     tags: ["jeopardy"]
-  },
-  {
-    event: "Sieberrsec CTF 2026",
-    place: 0,
-    total: 0,
-    team: "m0rbidmask",
-    url: "https://ctftime.org/event/0000/",
-    date: "2026",
-    tags: ["jeopardy"]
-  },
+  }
 ];
