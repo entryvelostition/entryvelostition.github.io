@@ -39,12 +39,12 @@ const CONTACTS = [
 
 // ---------- ОСНОВНЫЕ ДОСТИЖЕНИЯ (главная страница) ----------
 // Самое важное, что хочешь показать сразу. Кратко.
-// (Оставлено как есть — места по дивизионам верные.)
 const HIGHLIGHTS = [
-  { title: "1 место — EcoSolutions Hackathon", note: "III городской хакатон, Алматы, 2026" },
-  { title: "TJCTF 2026", note: "132 место" },
-  { title: "Alfa CTF 2026", note: "109 место" },
-  { title: "ВШЭ CTF", note: "26 место" },
+  { title: "🥇 EcoSolutions Hackathon", note: "1 место · III городской хакатон, Алматы" },
+  { title: "🛡️ Founder — m0rbidmask", note: "своя CTF-команда, активные соревнования" },
+  { title: "🏆 boroCTF 2026", note: "топ 9% · 75 из 819 команд" },
+  { title: "🥈 TJCTF 2026", note: "топ 14% · 128 из 948 команд" },
+  { title: "🎓 Республиканские олимпиады", note: "1 место — информатика и математика" },
 ];
 
 // ---------- СЕРТИФИКАТЫ (вкладка certs) ----------
@@ -256,4 +256,21 @@ const CTF = [
     displayDate: "12–16.06.2026",
     tags: ["jeopardy"]
   }
+];
+
+// ---------- НАВЫКИ (вкладка skills) ----------
+// id    — ключ категории (пригодится для перевода названия в RU/EN)
+// label — как показать название категории сейчас
+// tags  — список навыков/инструментов
+const SKILLS = [
+  { id: "web",     label: "Web",         tags: ["SQL Injection", "XSS", "CSRF", "LFI/RFI", "SSTI", "Burp Suite", "OWASP Top 10"] },
+  { id: "crypto",  label: "Crypto",      tags: ["RSA", "AES", "XOR", "Base64", "MD5", "SHA-1", "SHA-256"] },
+  { id: "reverse", label: "Reverse",     tags: ["Ghidra", "IDA Free", "strings", "x64dbg", "assembly x86/x64"] },
+  { id: "pwn",     label: "Pwn",         tags: ["pwntools", "Buffer Overflow", "GDB", "ROP"] },
+  { id: "forensics", label: "Forensics", tags: ["Wireshark", "Volatility", "Autopsy", "file analysis", "metadata analysis"] },
+  { id: "osint",   label: "OSINT",       tags: ["Google Dorking", "WHOIS", "DNS lookup", "Shodan", "Maltego"] },
+  { id: "lang",    label: "Языки",       tags: ["Python", "C", "Bash", "SQL", "JavaScript"] },
+  { id: "tools",   label: "Инструменты", tags: ["Linux", "Git", "Docker", "Nmap", "Netcat", "Hydra", "John the Ripper", "Hashcat"] },
+  { id: "net",     label: "Сети",        tags: ["TCP/IP", "HTTP/HTTPS", "DNS", "SSH", "FTP", "VLAN"] },
+  { id: "general", label: "Общее",       tags: ["CTF", "Linux administration", "scripting", "debugging", "log analysis"] },
 ];

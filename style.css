@@ -171,3 +171,21 @@ a.row.top{box-shadow:inset 3px 0 0 var(--accent)}
 /* ===== typewriter курсор ===== */
 .tw-cursor{display:inline-block;width:3px;height:1em;background:var(--accent);margin-left:3px;vertical-align:-2px;animation:tw-blink 1s steps(1) infinite}
 @keyframes tw-blink{0%,50%{opacity:1}50.01%,100%{opacity:0}}
+
+/* ===== skills (вкладка навыки) ===== */
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.skill-cat{
+  background:var(--paper);border:1px solid var(--line);border-radius:12px;
+  padding:18px 20px;border-left:3px solid var(--sage);transition:.15s
+}
+.skill-cat:hover{border-left-color:var(--accent);transform:translateY(-2px)}
+.skill-cat-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.skill-cat-name{font-family:var(--mono);font-weight:600;font-size:.95rem;color:var(--olive);letter-spacing:.3px}
+.skill-cat-count{font-family:var(--mono);font-size:.72rem;color:var(--ink-soft);background:var(--cream);border:1px solid var(--line);border-radius:999px;padding:2px 9px}
+.skill-tags{display:flex;flex-wrap:wrap;gap:8px}
+.skill-tag{
+  font-family:var(--mono);font-size:.78rem;color:var(--ink-soft);
+  background:var(--cream);border:1px solid var(--line);border-radius:6px;
+  padding:5px 11px;transition:.15s;cursor:default
+}
+.skill-tag:hover{color:var(--accent);border-color:var(--accent)}

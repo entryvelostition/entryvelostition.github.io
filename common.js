@@ -50,10 +50,11 @@ if (typeof CTF   !== "undefined") CTF.sort((a, b) => {
 
 function buildChrome(page){
   const tabs = [
-    { id:"home",  label:"главная", href:"index.html" },
-    { id:"bio",   label:"о себе",  href:"bio.html" },
-    { id:"certs", label:"сертификаты", href:"certs.html" },
-    { id:"ctf",   label:"ctf", href:"ctf.html" },
+    { id:"home",   label:"главная", href:"index.html" },
+    { id:"bio",    label:"о себе",  href:"bio.html" },
+    { id:"skills", label:"навыки",  href:"skills.html" },
+    { id:"certs",  label:"сертификаты", href:"certs.html" },
+    { id:"ctf",    label:"ctf", href:"ctf.html" },
   ];
 
   const nav = document.createElement("header");
