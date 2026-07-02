@@ -101,7 +101,7 @@ const CERTS = [
 
 // ---------- CTF РЕЗУЛЬТАТЫ (вкладка ctf) ----------
 // place / total — место и всего команд (считается "топ N%")
-// url — ссылка на борду на CTFtime
+// url — ссылка на борду на CTFtimed
 const CTF = [
   {
     event: "TJCTF 2026",
