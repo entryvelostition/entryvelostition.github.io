@@ -97,6 +97,14 @@ const CERTS = [
     file: "assets/certs/boroctf.pdf",
     thumb: "assets/certs/boroctf.png"
   },
+  {
+    title: "Международный конкурс исследовательских работ для студентов и учащихся образовательных учреждений в области технических и физико-математических наук - 2 место",
+    issuer: "Interclover",
+    date: "20.10.2022",
+    cat: "olympiad",
+    file: "assets/certs/2_mezh.pdf",
+    thumb: "assets/certs/2_mezh.jpg"
+  },
 ];
 
 // ---------- CTF РЕЗУЛЬТАТЫ (вкладка ctf) ----------
