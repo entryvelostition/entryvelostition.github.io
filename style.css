@@ -19,6 +19,7 @@ body{
   font-family:var(--sans);background:var(--cream);color:var(--ink);
   line-height:1.6;-webkit-font-smoothing:antialiased;
   min-height:100vh;display:flex;flex-direction:column;
+  overflow-x:hidden;
 }
 a{color:inherit;text-decoration:none}
 
@@ -35,6 +36,11 @@ a{color:inherit;text-decoration:none}
 .links a:hover{color:var(--ink)}
 .links a.active{color:var(--accent);font-weight:500}
 .links a.active::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--accent);border-radius:2px}
+
+/* бургер-кнопка (скрыта на десктопе) */
+.nav-burger{display:none;flex-direction:column;justify-content:center;gap:5px;width:40px;height:40px;padding:0;background:none;border:1px solid var(--line);border-radius:8px;cursor:pointer;transition:.15s}
+.nav-burger span{display:block;width:20px;height:2px;margin:0 auto;background:var(--ink-soft);border-radius:2px;transition:.2s}
+.nav-burger:hover{border-color:var(--accent)}
 
 /* ===== layout ===== */
 main{flex:1;width:100%;max-width:880px;margin:0 auto;padding:clamp(40px,6vw,72px) clamp(20px,5vw,40px)}
@@ -135,8 +141,24 @@ a.row.top{box-shadow:inset 3px 0 0 var(--accent)}
   .row.head{display:none}
   .c-place{display:flex;align-items:center;gap:6px}
   .c-team::before{content:"команда: ";color:var(--ink-soft)}
-  .links{gap:16px}
   .foot{flex-direction:column;align-items:flex-start}
+
+  /* мобильная навигация: бургер + выпадающее меню */
+  .nav{flex-wrap:wrap}
+  .nav-burger{display:flex}
+  .links{
+    display:none;flex-direction:column;gap:0;width:100%;
+    order:3;margin-top:14px;border-top:1px solid var(--line);padding-top:8px;
+  }
+  .nav.open .links{display:flex}
+  .links a{padding:12px 4px;font-size:1rem;border-bottom:1px solid var(--line)}
+  .links a:last-child{border-bottom:none}
+  .links a.active::after{display:none}
+  .links a.active{color:var(--accent);border-left:3px solid var(--accent);padding-left:12px}
+  /* анимация иконки бургера в крестик */
+  .nav.open .nav-burger span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .nav.open .nav-burger span:nth-child(2){opacity:0}
+  .nav.open .nav-burger span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 

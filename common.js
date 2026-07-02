@@ -61,10 +61,25 @@ function buildChrome(page){
   nav.className = "nav";
   nav.innerHTML = `
     <a class="brand" href="index.html">${PROFILE.nick}</a>
+    <button class="nav-burger" aria-label="Меню" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
     <nav class="links">
       ${tabs.map(t=>`<a href="${t.href}" class="${t.id===page?'active':''}">${t.label}</a>`).join("")}
     </nav>`;
   document.body.prepend(nav);
+
+  // бургер: открыть/закрыть меню на мобиле
+  const burger = nav.querySelector(".nav-burger");
+  const links = nav.querySelector(".links");
+  burger.addEventListener("click", ()=>{
+    const open = nav.classList.toggle("open");
+    burger.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+  // клик по ссылке закрывает меню
+  links.addEventListener("click", e=>{
+    if(e.target.tagName === "A"){ nav.classList.remove("open"); burger.setAttribute("aria-expanded","false"); }
+  });
 
   const ICONS = {
     github:'<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2 0 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2 0-.4-.5-1.6.2-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17 5 18 5.3 18 5.3c.7 1.6.2 2.8.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5Z"/></svg>',
