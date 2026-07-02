@@ -103,7 +103,7 @@ const CERTS = [
     date: "20.10.2022",
     cat: "olympiad",
     file: "assets/certs/2_mezh.pdf",
-    thumb: "assets/certs/2_mezh.jpg"
+    thumb: "assets/certs/2_mezh.png"
   },
 ];
 
