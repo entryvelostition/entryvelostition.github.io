@@ -112,7 +112,7 @@ const CERTS = [
     cat: "olympiad",
     file: "assets/certs/3_mezh.pdf",
     thumb: "assets/certs/3_mezh.png"
-  },
+  }
 ];
 
 // ---------- CTF РЕЗУЛЬТАТЫ (вкладка ctf) ----------
