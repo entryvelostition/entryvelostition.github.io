@@ -8,6 +8,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<style>
+  /* вкладка CTF: 3 колонки (дата убрана) */
+  .ctf-table .row{grid-template-columns:1.7fr 1fr 1fr}
+  @media(max-width:680px){ .ctf-table .row{grid-template-columns:1fr} }
+</style>
 </head>
 <body>
 <main>
@@ -25,18 +30,15 @@ buildChrome("ctf");
 const table = document.getElementById("table");
 let active = "all";
 
-const pct = (p,t)=> (p&&t) ? Math.round(p/t*100) : null;
-
 function render(list){
   table.innerHTML = `
     <div class="row head">
       <span class="c-event">соревнование</span>
       <span class="c-place">место</span>
       <span class="c-team">команда</span>
-      <span class="c-date">дата</span>
     </div>` + list.map(x=>{
-    const pc = pct(x.place,x.total);
-    const top = pc!==null && pc<=10 ? "top" : "";
+    const p = ctfPct(x);
+    const top = p && p.top ? "top" : "";
     return `
     <a class="row ${top}" href="${x.url}" target="_blank" rel="noopener">
       <span class="c-event">
@@ -45,10 +47,9 @@ function render(list){
       </span>
       <span class="c-place">
         ${x.place?`<b>#${x.place}</b>`:`<b>—</b>`}${x.total?`<small> / ${x.total}</small>`:""}
-        ${pc!==null?`<span class="pct ${top}">топ ${pc}%</span>`:""}
+        ${p?`<span class="pct ${top}">топ ${p.pct}%</span>`:""}
       </span>
       <span class="c-team">${x.team}</span>
-      <span class="c-date">${x.date}</span>
     </a>`;
   }).join("");
 }

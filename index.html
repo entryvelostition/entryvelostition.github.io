@@ -40,11 +40,11 @@ document.getElementById("highlights").innerHTML = HIGHLIGHTS.map(h=>`
   <div class="hl"><div class="t">${h.title}</div><div class="n">${h.note}</div></div>`).join("");
 
 // --- цифры-достижения (считаются автоматически из data.js) ---
-const played = CTF.filter(c => c.place > 0 && c.total > 0);
+const played = CTF.filter(c => ctfPct(c));
 let best = null;
 played.forEach(c => {
-  const pct = Math.round(c.place / c.total * 100);
-  if (best === null || pct < best.pct) best = { pct, event: c.event };
+  const p = ctfPct(c).pct;
+  if (best === null || p < best.pct) best = { pct: p, event: c.event };
 });
 const stats = [
   { num: played.length,  label: "сыграно CTF" },

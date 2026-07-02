@@ -38,7 +38,7 @@ function renderGrid(cat){
       <div class="cert-body">
         <h3>${c.title}</h3>
         <div class="iss">${c.issuer}</div>
-        <div class="dt">${c.date}</div>
+        <div class="dt">${fmtDate(c)}</div>
       </div>
       <span class="cert-open">открыть PDF ↗</span>
     </a>`).join("");

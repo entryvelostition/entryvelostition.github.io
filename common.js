@@ -1,5 +1,53 @@
-/* Общие компоненты: навигация и футер.
+/* Общие компоненты: навигация, футер, помощники.
    page — какая вкладка активна. */
+
+/* ---------- ПОМОЩНИКИ (доступны всем страницам) ---------- */
+
+// как показать дату: displayDate, иначе ISO -> ДД.ММ.ГГГГ
+function fmtDate(item){
+  if(item.displayDate) return item.displayDate;
+  if(!item.date) return "";
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(item.date);
+  return m ? `${m[3]}.${m[2]}.${m[1]}` : item.date;
+}
+
+// топ-процент по месту/количеству команд: {pct, top} или null
+function ctfPct(c){
+  if(!(c.place > 0 && c.total > 0)) return null;
+  const pct = Math.max(1, Math.round(c.place / c.total * 100));
+  return { pct, top: pct <= 20 };  // top<=20% подсветим акцентом
+}
+
+// сортировка массива по date (ISO) — новые сверху. Возвращает НОВЫЙ массив.
+function byDateDesc(arr){
+  return arr.slice().sort((a, b) => String(b.date).localeCompare(String(a.date)));
+}
+
+// избранные сертификаты (featured:true), новые сверху
+function featuredCerts(){
+  return byDateDesc(CERTS.filter(c => c.featured));
+}
+
+// сортировка CTF по результату — лучший топ% сверху. Возвращает НОВЫЙ массив.
+// без места/команд (place/total == 0) уезжают в конец.
+function byResult(arr){
+  const score = c => {
+    const p = ctfPct(c);
+    return p ? p.pct : Infinity;
+  };
+  return arr.slice().sort((a, b) => score(a) - score(b));
+}
+
+/* ---------- АВТОСОРТИРОВКА ГЛОБАЛЬНЫХ МАССИВОВ ----------
+   CERTS — по дате (новые сверху).
+   CTF   — по результату (лучший топ% сверху): дат на вкладке ctf нет. */
+if (typeof CERTS !== "undefined") CERTS.sort((a, b) => String(b.date).localeCompare(String(a.date)));
+if (typeof CTF   !== "undefined") CTF.sort((a, b) => {
+  const pa = ctfPct(a), pb = ctfPct(b);
+  return (pa ? pa.pct : Infinity) - (pb ? pb.pct : Infinity);
+});
+
+
 function buildChrome(page){
   const tabs = [
     { id:"home",  label:"главная", href:"index.html" },
