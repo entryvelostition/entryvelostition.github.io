@@ -112,6 +112,46 @@ const CERTS = [
     cat: "olympiad",
     file: "assets/certs/3_mezh.pdf",
     thumb: "assets/certs/3_mezh.png"
+  },
+  {
+    title: "Республиканская олимпиада по информатике - 1 место",
+    issuer: "Министерство информации и общест. развития РК",
+    date: "28.09.2024",
+    cat: "olympiad",
+    file: "assets/certs/10_info.pdf",
+    thumb: "assets/certs/10_info.png"
+  },
+  {
+    title: "Республиканская олимпиада по математике - 1 место",
+    issuer: "Министерство информации и общест. развития РК",
+    date: "22.09.2024",
+    cat: "olympiad",
+    file: "assets/certs/10_math.pdf",
+    thumb: "assets/certs/10_math.png"
+  },
+  {
+    title: "Fortinet - Threat Landscape 3.0",
+    issuer: "Fortinet",
+    date: "19.11.2025",
+    cat: "edu",
+    file: "assets/certs/fortinet.pdf",
+    thumb: "assets/certs/fortinet.png"
+  },
+  {
+    title: "KIMEP AI Conference",
+    issuer: "KIMEP University",
+    date: "27.02.2026 - 28.02.2026",
+    cat: "olympiad",
+    file: "assets/certs/kimep_ai_conf.pdf",
+    thumb: "assets/certs/kimep_ai_conf.png"
+  },
+  {
+    title: "Республиканский онлайн марафон 'Мега-мозг' - 2 место",
+    issuer: "IQ center Urker",
+    date: "07.10.2026 - 13.10.2026",
+    cat: "olympiad",
+    file: "assets/certs/urker_mega_mozg.pdf",
+    thumb: "assets/certs/urker_mega_mozg.png"
   }
 ];
 
