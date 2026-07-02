@@ -44,7 +44,7 @@ const CERTS = [
   {
     title: "EcoSolutions Hackathon — 1 место",
     issuer: "ALEM / Управление образования Алматы",
-    date: "2026",
+    date: "24.04.2026",
     cat: "olympiad",
     file: "assets/certs/ecosolutions.pdf",
     thumb: "assets/certs/ecosolutions.png"
@@ -52,7 +52,7 @@ const CERTS = [
   {
     title: "TJCTF 2026",
     issuer: "Thomas Jefferson High School for Science and Technology",	
-    date: "2026",
+    date: "15.05.2026 - 17.05.2026",
     cat: "ctf",
     file: "assets/certs/tjctf-2026.pdf",
     thumb: "assets/certs/tjctf-2026.png"
@@ -60,7 +60,7 @@ const CERTS = [
   {
     title: "Alfa CTF 2026",
     issuer: "AlfaBank",
-    date: "2026",
+    date: "25.04.2026",
     cat: "ctf",
     file: "assets/certs/alfa-ctf-2026.pdf",
     thumb: "assets/certs/alfa-ctf-2026.png"
@@ -68,23 +68,23 @@ const CERTS = [
   {
     title: "ВШЭ CTF 2026",
     issuer: "НИУ ВШЭ",
-    date: "2026",
+    date: "30.05.2026",
     cat: "ctf",
     file: "assets/certs/hse-ctf.pdf",
     thumb: "assets/certs/hse-ctf.png"
   },
   {
-    title: "TryHackMe",
+    title: "TryHackMe - Pre Security",
     issuer: "TryHackMe",
-    date: "2025",
+    date: "07.12.2025",
     cat: "edu",
     file: "assets/certs/thm-8zpzxd.pdf",
     thumb: "assets/certs/thm-8zpzxd.png"
   },
   {
-    title: "TryHackMe",
+    title: "TryHackMe - Cybersecurity 101",
     issuer: "TryHackMe",
-    date: "2026",
+    date: "09.06.2026",
     cat: "edu",
     file: "assets/certs/thm-lt3gvu.pdf",
     thumb: "assets/certs/thm-lt3gvu.png"
@@ -104,6 +104,14 @@ const CERTS = [
     cat: "olympiad",
     file: "assets/certs/2_mezh.pdf",
     thumb: "assets/certs/2_mezh.png"
+  },
+  {
+    title: "Международный конкурс исследовательских работ для студентов и учащихся образовательных учреждений в области технических и физико-математических наук - 3 место",
+    issuer: "Interclover",
+    date: "20.11.2022",
+    cat: "olympiad",
+    file: "assets/certs/3_mezh.pdf",
+    thumb: "assets/certs/3_mezh.png"
   },
 ];
 
