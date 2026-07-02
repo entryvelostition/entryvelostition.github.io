@@ -152,6 +152,22 @@ const CERTS = [
     cat: "olympiad",
     file: "assets/certs/urker_mega_mozg.pdf",
     thumb: "assets/certs/urker_mega_mozg.png"
+  },
+  {
+    title: "Study Link - завершение курсов английского языка до уровня C1",
+    issuer: "StudyLink",
+    date: "21.02.2025",
+    cat: "edu",
+    file: "assets/certs/english.pdf",
+    thumb: "assets/certs/english.png"
+  },
+  {
+    title: "Академия 'Мир Шахмат' - Диплом первой степени III разряд",
+    issuer: "Академия FIDE Мир Шахмат",
+    date: "05.05.2024",
+    cat: "edu",
+    file: "assets/certs/fide.pdf",
+    thumb: "assets/certs/fide.png"
   }
 ];
 
