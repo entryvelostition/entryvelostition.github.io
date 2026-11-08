@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Райтап — m0rbidmask</title>
+<meta name="description" content="Разбор задачи с CTF.">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://entryvelostition.github.io/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#00674f">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <a class="wu-back" href="writeups.html" data-i18n="wu.back">← все райтапы</a>
+  <header class="wu-head" id="head"></header>
+  <article class="md" id="md"></article>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="data.js"></script>
+<script src="common.js"></script>
+<script>
+buildChrome("writeups");
+const id = new URLSearchParams(location.search).get("id") || "";
+const w = WRITEUPS.find(x => x.id === id);
+const head = document.getElementById("head");
+const md = document.getElementById("md");
+
+if (!w || !/^[a-z0-9-]+$/i.test(id)) {
+  md.innerHTML = `<p class="empty-note">${t("wu.notfound")}</p>`;
+} else {
+  document.title = `${L(w, "title")} — ${w.ctf ? w.ctf + " — " : ""}m0rbidmask`;
+  head.innerHTML = `
+    <div class="wu-meta">
+      ${w.cat ? `<span class="wu-cat">${w.cat}</span>` : ""}
+      <span>${w.ctf || ""}</span>
+      <span class="wu-date">${fmtDate(w)}</span>
+    </div>
+    <h1 class="page-title">${L(w, "title")}</h1>
+    ${(w.tags || []).length ? `<span class="row-tags">${w.tags.map(g => `<i>${g}</i>`).join("")}</span>` : ""}`;
+
+  const file = `writeups/${id}${LANG === "en" && w.en ? ".en" : ""}.md`;
+  fetch(file, { cache: "no-cache" })
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+    .then(text => {
+      md.innerHTML = DOMPurify.sanitize(marked.parse(text));
+      // картинки и ссылки из .md считаем относительно папки writeups/
+      md.querySelectorAll("img[src]").forEach(img => {
+        const s = img.getAttribute("src");
+        if (!/^([a-z]+:|\/|#)/i.test(s)) img.setAttribute("src", "writeups/" + s);
+        img.loading = "lazy";
+      });
+      md.querySelectorAll("a[href^='http']").forEach(a => { a.target = "_blank"; a.rel = "noopener"; });
+      // якоря у заголовков
+      md.querySelectorAll("h2, h3").forEach(h => {
+        h.id = h.textContent.trim().toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "-").replace(/^-|-$/g, "");
+      });
+      md.querySelectorAll("pre code").forEach(el => hljs.highlightElement(el));
+      if (location.hash) { const el = document.getElementById(decodeURIComponent(location.hash.slice(1))); if (el) el.scrollIntoView(); }
+    })
+    .catch(() => { md.innerHTML = `<p class="empty-note">${t("wu.loadError")}</p>`; });
+}
+</script>
+</body>
+</html>

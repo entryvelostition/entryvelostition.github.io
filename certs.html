@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Сертификаты — m0rbidmask</title>
 <meta name="description" content="Сертификаты и дипломы: CTF, олимпиады, хакатоны, курсы по кибербезопасности.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Сертификаты — Алдияр Әбілхан">
+<meta property="og:description" content="CTF, олимпиады, хакатоны, курсы по кибербезопасности.">
+<meta property="og:url" content="https://entryvelostition.github.io/certs.html">
+<meta property="og:image" content="https://entryvelostition.github.io/og.png">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#00674f">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
@@ -16,8 +22,8 @@
 <body>
 <main>
   <p class="eyebrow">certificates</p>
-  <h1 class="page-title">Сертификаты</h1>
-  <p class="page-sub">Кликни по карточке — откроется PDF.</p>
+  <h1 class="page-title" data-i18n="certs.title">Сертификаты</h1>
+  <p class="page-sub" data-i18n="certs.sub">Нажми на карточку — откроется просмотр.</p>
   <div class="cert-filters" id="filters"></div>
   <div class="cert-grid" id="grid"></div>
 </main>
@@ -27,30 +33,31 @@
 <script>
 buildChrome("certs");
 
-const CAT_LABELS = { all:"все", ctf:"CTF", olympiad:"олимпиады", edu:"образовательные" };
 const CAT_ORDER = ["all","ctf","olympiad","edu"];
 const present = new Set(CERTS.map(c => c.cat).filter(Boolean));
-
 const filtersEl = document.getElementById("filters");
 const gridEl = document.getElementById("grid");
+let shown = CERTS;   // текущий отфильтрованный список (по нему листает просмотрщик)
 
 function renderGrid(cat){
-  const list = (cat === "all") ? CERTS : CERTS.filter(c => c.cat === cat);
-  gridEl.innerHTML = list.map(c=>`
-    <a class="cert" href="${c.file}" target="_blank" rel="noopener">
-      <div class="cert-thumb">${c.thumb?`<img src="${thumbSrc(c)}" alt="${c.title}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='${c.thumb}'">`:`<span class="ph">${c.title[0]}</span>`}</div>
+  shown = (cat === "all") ? CERTS : CERTS.filter(c => c.cat === cat);
+  gridEl.innerHTML = shown.map((c, i)=>`
+    <a class="cert" href="${c.file}" target="_blank" rel="noopener" data-i="${i}">
+      <div class="cert-thumb">${c.thumb
+        ? `<img src="${thumbSrc(c)}" alt="${L(c,"title")}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='${c.thumb}'">`
+        : `<span class="ph">${L(c,"title")[0]}</span>`}</div>
       <div class="cert-body">
-        <h3>${c.title}</h3>
-        <div class="iss">${c.issuer}</div>
+        <h3>${L(c,"title")}</h3>
+        <div class="iss">${L(c,"issuer")}</div>
         <div class="dt">${fmtDate(c)}</div>
       </div>
-      <span class="cert-open">открыть PDF ↗</span>
+      <span class="cert-open">${c.thumb ? t("certs.view") : "PDF ↗"}</span>
     </a>`).join("");
 }
 
 filtersEl.innerHTML = CAT_ORDER
   .filter(cat => cat === "all" || present.has(cat))
-  .map((cat,i) => `<button class="cert-filter${i===0?' active':''}" data-cat="${cat}">${CAT_LABELS[cat]}</button>`)
+  .map((cat,i) => `<button class="cert-filter${i===0?' active':''}" type="button" data-cat="${cat}">${t("cat." + cat)}</button>`)
   .join("");
 
 filtersEl.addEventListener("click", e => {
@@ -62,6 +69,112 @@ filtersEl.addEventListener("click", e => {
 });
 
 renderGrid("all");
+
+/* ---------- просмотрщик ---------- */
+const viewer = document.createElement("div");
+viewer.className = "viewer";
+viewer.hidden = true;
+viewer.setAttribute("role", "dialog");
+viewer.setAttribute("aria-modal", "true");
+viewer.innerHTML = `
+  <button class="viewer-close" type="button" aria-label="${t("viewer.close")}">×</button>
+  <button class="viewer-nav prev" type="button" aria-label="${t("viewer.prev")}">‹</button>
+  <figure class="viewer-box">
+    <div class="viewer-img"><img alt=""></div>
+    <figcaption class="viewer-cap">
+      <div class="viewer-text">
+        <h3 id="viewer-title"></h3>
+        <p class="iss"></p>
+        <p class="dt"></p>
+      </div>
+      <div class="viewer-actions">
+        <span class="viewer-count"></span>
+        <a class="btn primary viewer-pdf" target="_blank" rel="noopener">${t("viewer.pdf")}</a>
+      </div>
+    </figcaption>
+  </figure>
+  <button class="viewer-nav next" type="button" aria-label="${t("viewer.next")}">›</button>`;
+document.body.appendChild(viewer);
+viewer.setAttribute("aria-labelledby", "viewer-title");
+
+const vImg = viewer.querySelector(".viewer-img img");
+let cur = 0, lastFocus = null;
+
+function show(i){
+  cur = (i + shown.length) % shown.length;
+  const c = shown[cur];
+  viewer.querySelector("h3").textContent = L(c, "title");
+  viewer.querySelector(".iss").textContent = L(c, "issuer");
+  viewer.querySelector(".dt").textContent = fmtDate(c);
+  viewer.querySelector(".viewer-count").textContent = `${cur + 1} / ${shown.length}`;
+  viewer.querySelector(".viewer-pdf").href = c.file;
+  vImg.alt = L(c, "title");
+
+  // сначала показываем уже загруженное превью, потом подменяем на чёткую версию
+  const want = cur;
+  vImg.classList.add("loading");
+  vImg.onerror = () => { vImg.onerror = null; vImg.src = c.thumb; };
+  vImg.src = thumbSrc(c);
+  const full = new Image();
+  full.onload = () => { if (cur === want) { vImg.src = full.src; vImg.classList.remove("loading"); } };
+  full.onerror = () => { if (cur === want) vImg.classList.remove("loading"); };
+  full.src = fullSrc(c);
+
+  // заранее подгрузим соседей, чтобы листалось без задержки
+  [cur + 1, cur - 1].forEach(j => { const n = shown[(j + shown.length) % shown.length]; if (n && n.thumb) new Image().src = fullSrc(n); });
+}
+
+function openViewer(i){
+  lastFocus = document.activeElement;
+  viewer.hidden = false;
+  viewer.classList.toggle("single", shown.length < 2);
+  document.body.classList.add("no-scroll");
+  show(i);
+  viewer.querySelector(".viewer-close").focus();
+}
+function closeViewer(){
+  viewer.hidden = true;
+  document.body.classList.remove("no-scroll");
+  if (lastFocus) lastFocus.focus();
+}
+
+gridEl.addEventListener("click", e => {
+  const a = e.target.closest(".cert");
+  if (!a) return;
+  if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey || e.button !== 0) return;  // ctrl+клик — PDF в новой вкладке
+  const c = shown[+a.dataset.i];
+  if (!c || !c.thumb) return;  // без картинки — просто открываем PDF
+  e.preventDefault();
+  openViewer(+a.dataset.i);
+});
+
+viewer.querySelector(".viewer-close").addEventListener("click", closeViewer);
+viewer.querySelector(".prev").addEventListener("click", () => show(cur - 1));
+viewer.querySelector(".next").addEventListener("click", () => show(cur + 1));
+viewer.addEventListener("click", e => { if (e.target === viewer || e.target.classList.contains("viewer-img")) closeViewer(); });
+
+document.addEventListener("keydown", e => {
+  if (viewer.hidden) return;
+  if (e.key === "Escape") { e.preventDefault(); closeViewer(); }
+  else if (e.key === "ArrowLeft") show(cur - 1);
+  else if (e.key === "ArrowRight") show(cur + 1);
+  else if (e.key === "Tab") {  // фокус не уходит из окна
+    const f = [...viewer.querySelectorAll("button:not([hidden]), a[href]")].filter(x => x.offsetParent);
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+});
+
+// свайп на телефоне
+let tx = null, ty = null;
+viewer.addEventListener("touchstart", e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+viewer.addEventListener("touchend", e => {
+  if (tx === null) return;
+  const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) show(cur + (dx < 0 ? 1 : -1));
+  tx = ty = null;
+});
 </script>
 </body>
 </html>

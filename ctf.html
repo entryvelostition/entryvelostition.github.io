@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CTF — m0rbidmask</title>
 <meta name="description" content="Результаты CTF-соревнований: места, команды, ссылки на CTFtime.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="CTF результаты — Алдияр Әбілхан">
+<meta property="og:description" content="Места, команды и ссылки на CTFtime.">
+<meta property="og:url" content="https://entryvelostition.github.io/ctf.html">
+<meta property="og:image" content="https://entryvelostition.github.io/og.png">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#00674f">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
@@ -13,7 +19,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <style>
-  /* вкладка CTF: 3 колонки (дата убрана) */
+  /* вкладка CTF: 3 колонки, дата — под названием */
   .ctf-table .row{grid-template-columns:1.7fr 1fr 1fr}
   @media(max-width:680px){ .ctf-table .row{grid-template-columns:1fr} }
 </style>
@@ -21,9 +27,15 @@
 <body>
 <main>
   <p class="eyebrow">capture the flag</p>
-  <h1 class="page-title">CTF результаты</h1>
-  <p class="page-sub">Соревнования, места и команды. Клик по строке открывает борду на CTFtime.</p>
-  <div class="chips" id="chips"></div>
+  <h1 class="page-title" data-i18n="ctf.title">CTF результаты</h1>
+  <p class="page-sub" data-i18n="ctf.sub">Соревнования, места и команды.</p>
+  <div class="ctf-controls">
+    <div class="chips" id="chips"></div>
+    <div class="seg" id="sort" role="group">
+      <button type="button" class="on" data-s="result" data-i18n="ctf.byResult">по результату</button>
+      <button type="button" data-s="date" data-i18n="ctf.byDate">по дате</button>
+    </div>
+  </div>
   <div class="ctf-table" id="table"></div>
 </main>
 
@@ -32,43 +44,58 @@
 <script>
 buildChrome("ctf");
 const table = document.getElementById("table");
-let active = "all";
+let team = "all", sort = "result";
 
-function render(list){
+function render(){
+  let list = team === "all" ? CTF : CTF.filter(x => x.team === team);
+  list = sort === "date" ? byDateDesc(list) : byResult(list);
   table.innerHTML = `
     <div class="row head">
-      <span class="c-event">соревнование</span>
-      <span class="c-place">место</span>
-      <span class="c-team">команда</span>
+      <span class="c-event">${t("ctf.event")}</span>
+      <span class="c-place">${t("ctf.place")}</span>
+      <span class="c-team">${t("ctf.team")}</span>
     </div>` + list.map(x=>{
     const p = ctfPct(x);
     const top = p && p.top ? "top" : "";
+    const tags = x.tags && x.tags.length ? `<span class="row-tags">${x.tags.map(g=>`<i>${g}</i>`).join("")}</span>` : "";
     return `
     <a class="row ${top}" href="${x.url}" target="_blank" rel="noopener">
       <span class="c-event">
-        <strong>${x.event}</strong>
-        ${x.tags&&x.tags.length?`<span class="row-tags">${x.tags.map(t=>`<i>${t}</i>`).join("")}</span>`:""}
+        <strong>${L(x,"event")}</strong>
+        <span class="c-when">${fmtDate(x)}</span>
+        ${tags}
       </span>
       <span class="c-place">
         ${x.place?`<b>#${x.place}</b>`:`<b>—</b>`}${x.total?`<small> / ${x.total}</small>`:""}
-        ${p?`<span class="pct ${top}">топ ${p.pct}%</span>`:""}
+        ${p?`<span class="pct ${top}">${t("top")} ${p.pct}%</span>`:""}
       </span>
-      <span class="c-team">${x.team}</span>
+      <span class="c-team" data-label="${t("ctf.team")}: ">${x.team}</span>
     </a>`;
   }).join("");
 }
 
 const teams = ["all", ...new Set(CTF.map(x=>x.team))];
 const chips = document.getElementById("chips");
-chips.innerHTML = teams.map(t=>`<button class="chip ${t==='all'?'on':''}" data-t="${t}">${t==='all'?'все':t}</button>`).join("");
+chips.innerHTML = teams.map(x=>`<button type="button" class="chip ${x==='all'?'on':''}" data-t="${x}">${x==='all'?t("ctf.all"):x}</button>`).join("");
 chips.addEventListener("click", e=>{
-  if(!e.target.dataset.t) return;
-  active = e.target.dataset.t;
-  [...chips.children].forEach(b=>b.classList.toggle("on", b.dataset.t===active));
-  render(active==="all"?CTF:CTF.filter(x=>x.team===active));
+  const b = e.target.closest(".chip");
+  if(!b) return;
+  team = b.dataset.t;
+  [...chips.children].forEach(c=>c.classList.toggle("on", c.dataset.t===team));
+  render();
 });
 
-render(CTF);
+const sortEl = document.getElementById("sort");
+sortEl.addEventListener("click", e=>{
+  const b = e.target.closest("button");
+  if(!b) return;
+  sort = b.dataset.s;
+  [...sortEl.children].forEach(c=>{ c.classList.toggle("on", c===b); c.setAttribute("aria-pressed", c===b); });
+  render();
+});
+[...sortEl.children].forEach(c=>c.setAttribute("aria-pressed", c.classList.contains("on")));
+
+render();
 </script>
 </body>
 </html>

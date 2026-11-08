@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>О себе — m0rbidmask</title>
 <meta name="description" content="Алдияр Әбілхан: кибербезопасность, криптография, CTF, команда m0rbidmask, bug bounty.">
+<meta property="og:type" content="profile">
+<meta property="og:title" content="О себе — Алдияр Әбілхан">
+<meta property="og:description" content="Кибербезопасность, криптография, CTF, команда m0rbidmask, bug bounty.">
+<meta property="og:url" content="https://entryvelostition.github.io/bio.html">
+<meta property="og:image" content="https://entryvelostition.github.io/og.png">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#00674f">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
@@ -16,7 +22,7 @@
 <body>
 <main>
   <p class="eyebrow">about</p>
-  <h1 class="page-title">О себе</h1>
+  <h1 class="page-title" data-i18n="bio.title">О себе</h1>
   <p class="page-sub" id="role"></p>
   <div class="bio" id="bio"></div>
 </main>
@@ -25,8 +31,9 @@
 <script src="common.js"></script>
 <script>
 buildChrome("bio");
-document.getElementById("role").textContent = (PROFILE.name?PROFILE.name+" · ":"") + PROFILE.role;
-document.getElementById("bio").innerHTML = BIO.map(p=>`<p>${p}</p>`).join("");
+const fullName = L(PROFILE, "name");
+document.getElementById("role").textContent = (fullName ? fullName + " · " : "") + L(PROFILE, "role");
+document.getElementById("bio").innerHTML = (LANG === "en" ? BIO_EN : BIO).map(p=>`<p>${p}</p>`).join("");
 </script>
 </body>
 </html>

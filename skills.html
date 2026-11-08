@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Навыки — m0rbidmask</title>
 <meta name="description" content="Навыки и инструменты: web, crypto, reverse, pwn, forensics, OSINT, сети.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Навыки — Алдияр Әбілхан">
+<meta property="og:description" content="Web, crypto, reverse, pwn, forensics, OSINT, сети.">
+<meta property="og:url" content="https://entryvelostition.github.io/skills.html">
+<meta property="og:image" content="https://entryvelostition.github.io/og.png">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#00674f">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
@@ -16,8 +22,8 @@
 <body>
 <main>
   <p class="eyebrow">skills</p>
-  <h1 class="page-title">Навыки</h1>
-  <p class="page-sub">Направления и инструменты, с которыми работаю.</p>
+  <h1 class="page-title" data-i18n="skills.title">Навыки</h1>
+  <p class="page-sub" data-i18n="skills.sub">Направления и инструменты, с которыми работаю.</p>
   <div class="skills-grid" id="skills"></div>
 </main>
 
@@ -29,11 +35,11 @@ buildChrome("skills");
 document.getElementById("skills").innerHTML = SKILLS.map(cat=>`
   <div class="skill-cat">
     <div class="skill-cat-head">
-      <span class="skill-cat-name">${cat.label}</span>
+      <span class="skill-cat-name">${L(cat,"label")}</span>
       <span class="skill-cat-count">${cat.tags.length}</span>
     </div>
     <div class="skill-tags">
-      ${cat.tags.map(t=>`<span class="skill-tag">${t}</span>`).join("")}
+      ${cat.tags.map(x=>`<span class="skill-tag">${x}</span>`).join("")}
     </div>
   </div>`).join("");
 </script>

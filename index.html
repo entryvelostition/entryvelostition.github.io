@@ -6,9 +6,14 @@
 <title>m0rbidmask</title>
 <meta name="description" content="Алдияр Әбілхан (entryvelostition) — информационная безопасность и CTF. Результаты соревнований, сертификаты, навыки.">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="entryvelostition">
 <meta property="og:title" content="Алдияр Әбілхан — ИБ · CTF">
 <meta property="og:description" content="Информационная безопасность, CTF, саморазвитие. Результаты, сертификаты, навыки.">
 <meta property="og:url" content="https://entryvelostition.github.io/">
+<meta property="og:image" content="https://entryvelostition.github.io/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#00674f">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
@@ -25,16 +30,16 @@
     <p class="role" id="role"></p>
     <p class="tagline" id="tagline"></p>
     <div class="cta">
-      <a href="certs.html" class="btn">Сертификаты</a>
-      <a href="ctf.html" class="btn">CTF</a>
-      <a href="bio.html" class="btn">О себе</a>
+      <a href="certs.html" class="btn" data-i18n="home.certs">Сертификаты</a>
+      <a href="ctf.html" class="btn" data-i18n="home.ctf">CTF</a>
+      <a href="bio.html" class="btn" data-i18n="home.bio">О себе</a>
     </div>
   </section>
 
   <section class="stats" id="stats"></section>
 
   <section>
-    <h2 class="block-h">основные достижения</h2>
+    <h2 class="block-h" data-i18n="home.highlights">основные достижения</h2>
     <div class="highlights" id="highlights"></div>
   </section>
 </main>
@@ -43,21 +48,21 @@
 <script src="common.js"></script>
 <script>
 buildChrome("home");
-document.getElementById("role").textContent = PROFILE.role;
+document.getElementById("role").textContent = L(PROFILE, "role");
 document.getElementById("highlights").innerHTML = HIGHLIGHTS.map(h=>`
-  <div class="hl"><div class="t">${h.title}</div><div class="n">${h.note}</div></div>`).join("");
+  <div class="hl"><div class="t">${L(h,"title")}</div><div class="n">${L(h,"note")}</div></div>`).join("");
 
 // --- цифры-достижения (считаются автоматически из data.js) ---
 const played = CTF.filter(c => ctfPct(c));
 let best = null;
 played.forEach(c => {
   const p = ctfPct(c).pct;
-  if (best === null || p < best.pct) best = { pct: p, event: c.event };
+  if (best === null || p < best.pct) best = { pct: p, event: L(c, "event") };
 });
 const stats = [
-  { num: played.length,  label: "сыграно CTF" },
-  { num: CERTS.length,   label: "сертификатов" },
-  ...(best ? [{ num: "топ " + best.pct + "%", label: "лучший результат", sub: best.event }] : []),
+  { num: played.length,  label: t("stat.played") },
+  { num: CERTS.length,   label: t("stat.certs") },
+  ...(best ? [{ num: t("top") + " " + best.pct + "%", label: t("stat.best"), sub: best.event }] : []),
 ];
 document.getElementById("stats").innerHTML = stats.map(s=>`
   <div class="stat">
@@ -70,8 +75,8 @@ document.getElementById("stats").innerHTML = stats.map(s=>`
 const nickEl = document.getElementById("nick");
 const tagEl  = document.getElementById("tagline");
 const curEl  = document.getElementById("twcur");
-const NAME = PROFILE.name || PROFILE.nick;
-const TAG  = PROFILE.tagline || "";
+const NAME = L(PROFILE, "name") || PROFILE.nick;
+const TAG  = L(PROFILE, "tagline") || "";
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function typeText(el, txt, speed, done){
@@ -83,7 +88,6 @@ function typeText(el, txt, speed, done){
 }
 
 if(reduceMotion){
-  // если анимации отключены — показываем сразу
   nickEl.textContent = NAME;
   tagEl.textContent  = TAG;
   if(curEl) curEl.style.display = "none";
@@ -92,12 +96,12 @@ if(reduceMotion){
   tagEl.textContent  = "";
   typeText(nickEl, NAME, 80, ()=>{
     setTimeout(()=>typeText(tagEl, TAG, 30, ()=>{
-      if(curEl) curEl.style.display = "none";  // курсор гаснет после печати
+      if(curEl) curEl.style.display = "none";
     }), 400);
   });
 }
 
-// --- анимация появления при скролле (без .intro — там печать) ---
+// --- анимация появления при скролле ---
 const io = new IntersectionObserver((entries)=>{
   entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } });
 }, { threshold: 0.12 });
