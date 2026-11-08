@@ -23,6 +23,13 @@ function byDateDesc(arr){
   return arr.slice().sort((a, b) => String(b.date).localeCompare(String(a.date)));
 }
 
+// лёгкое превью: assets/certs/thumbs/<имя>.jpg (делает tools/make-thumbs.ps1).
+// если превью ещё нет — <img onerror> откатится на оригинальный thumb.
+function thumbSrc(c){
+  const m = /^(.*\/)([^\/]+)\.png$/i.exec(c.thumb || "");
+  return m ? `${m[1]}thumbs/${m[2]}.jpg` : c.thumb;
+}
+
 // избранные сертификаты (featured:true), новые сверху
 function featuredCerts(){
   return byDateDesc(CERTS.filter(c => c.featured));
@@ -61,13 +68,29 @@ function buildChrome(page){
   nav.className = "nav";
   nav.innerHTML = `
     <a class="brand" href="index.html">${PROFILE.nick}</a>
-    <button class="nav-burger" aria-label="Меню" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-    <nav class="links">
-      ${tabs.map(t=>`<a href="${t.href}" class="${t.id===page?'active':''}">${t.label}</a>`).join("")}
-    </nav>`;
+    <nav class="links" aria-label="Разделы сайта">
+      ${tabs.map(t=>`<a href="${t.href}"${t.id===page?' class="active" aria-current="page"':''}>${t.label}</a>`).join("")}
+    </nav>
+    <div class="nav-actions">
+      <button class="theme-toggle" type="button" aria-label="Сменить тему" title="Сменить тему">
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button class="nav-burger" type="button" aria-label="Меню" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>`;
   document.body.prepend(nav);
+
+  // тема: светлая/тёмная. По умолчанию — как в системе, выбор запоминается.
+  const root = document.documentElement;
+  const sysDark = window.matchMedia("(prefers-color-scheme: dark)");
+  const isDark = () => root.dataset.theme ? root.dataset.theme === "dark" : sysDark.matches;
+  nav.querySelector(".theme-toggle").addEventListener("click", ()=>{
+    const next = isDark() ? "light" : "dark";
+    root.dataset.theme = next;
+    try { localStorage.setItem("theme", next); } catch(e) {}
+  });
 
   // бургер: открыть/закрыть меню на мобиле
   const burger = nav.querySelector(".nav-burger");
@@ -93,6 +116,6 @@ function buildChrome(page){
     <div class="foot-links">
       ${CONTACTS.map(c=>`<a href="${c.url}" target="_blank" rel="noopener">${ICONS[c.icon]||""}<span>${c.handle}</span></a>`).join("")}
     </div>
-    <span class="foot-note">${PROFILE.nick} · 2026</span>`;
+    <span class="foot-note">${PROFILE.nick} · ${new Date().getFullYear()}</span>`;
   document.body.appendChild(foot);
 }
